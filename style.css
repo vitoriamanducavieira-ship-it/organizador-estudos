@@ -1,1 +1,123 @@
+// Navegação entre abas
+const navBtns = document.querySelectorAll('.nav-btn');
+const tabPanes = document.querySelectorAll('.tab-pane');
 
+navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        navBtns.forEach(b => b.classList.remove('active'));
+        tabPanes.forEach(p => p.classList.remove('active'));
+        
+        btn.classList.add('active');
+        const target = document.getElementById(btn.dataset.tab);
+        target.classList.add('active');
+    });
+});
+
+// Data Atual no Header
+const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+document.getElementById('current-date').innerText = new Date().toLocaleDateString('pt-BR', options);
+
+// Gerenciamento de Tarefas Genérico
+function setupTaskManager(inputId, btnId, listId, storageKey) {
+    const input = document.getElementById(inputId);
+    const btn = document.getElementById(btnId);
+    const list = document.getElementById(listId);
+
+    let tasks = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+    function renderTasks() {
+        list.innerHTML = '';
+        tasks.forEach((task, index) => {
+            const li = document.createElement('li');
+            if (task.completed) li.classList.add('completed');
+            
+            li.innerHTML = `
+                <span>${task.text}</span>
+                <div class="task-actions">
+                    <button class="complete-btn" onclick="toggleTask('${storageKey}', ${index})"><i class="fa-solid fa-check"></i></button>
+                    <button class="delete-btn" onclick="deleteTask('${storageKey}', ${index})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+            list.appendChild(li);
+        });
+        updateDashboardStats();
+    }
+
+    btn.addEventListener('click', () => {
+        if (input.value.trim() === '') return;
+        tasks.push({ text: input.value, completed: false });
+        input.value = '';
+        localStorage.setItem(storageKey, JSON.stringify(tasks));
+        renderTasks();
+    });
+
+    renderTasks();
+}
+
+window.toggleTask = function(storageKey, index) {
+    let tasks = JSON.parse(localStorage.getItem(storageKey));
+    tasks[index].completed = !tasks[index].completed;
+    localStorage.setItem(storageKey, JSON.stringify(tasks));
+    location.reload(); // Recarrega simples para atualizar estados globais
+};
+
+window.deleteTask = function(storageKey, index) {
+    let tasks = JSON.parse(localStorage.getItem(storageKey));
+    tasks.splice(index, 1);
+    localStorage.setItem(storageKey, JSON.stringify(tasks));
+    location.reload();
+};
+
+setupTaskManager('daily-input', 'add-daily-btn', 'daily-list', 'daily_tasks');
+setupTaskManager('monthly-input', 'add-monthly-btn', 'monthly-list', 'monthly_tasks');
+setupTaskManager('annual-input', 'add-annual-btn', 'annual-list', 'annual_tasks');
+
+function updateDashboardStats() {
+    const daily = JSON.parse(localStorage.getItem('daily_tasks')) || [];
+    const monthly = JSON.parse(localStorage.getItem('monthly_tasks')) || [];
+    const annual = JSON.parse(localStorage.getItem('annual_tasks')) || [];
+    const all = [...daily, ...monthly, ...annual];
+
+    const total = all.filter(t => !t.completed).length;
+    const completed = all.filter(t => t.completed).length;
+
+    document.getElementById('total-tasks').innerText = total;
+    document.getElementById('completed-tasks').innerText = completed;
+}
+updateDashboardStats();
+
+// Cronômetro Pomodoro
+let timeLeft = 25 * 60;
+let timerId = null;
+const timerDisplay = document.getElementById('timer');
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerDisplay.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+document.getElementById('start-timer').addEventListener('click', () => {
+    if (timerId !== null) return;
+    timerId = setInterval(() => {
+        if (timeLeft > 0) {
+            timeLeft--;
+            updateTimerDisplay();
+        } else {
+            clearInterval(timerId);
+            alert('Tempo esgotado! Hora de descansar.');
+        }
+    }, 1000);
+});
+
+document.getElementById('pause-timer').addEventListener('click', () => {
+    clearInterval(timerId);
+    timerId = null;
+});
+
+document.getElementById('reset-timer').addEventListener('click', () => {
+    clearInterval(timerId);
+    timerId = null;
+    timeLeft = 25 * 60;
+    updateTimerDisplay();
+});
