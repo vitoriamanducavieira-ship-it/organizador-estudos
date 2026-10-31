@@ -1,1 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyFlow - Organizador de Estudos</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Navegação -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>StudyFlow</span>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-tab="dashboard"><i class="fa-solid fa-house"></i> Dashboard</button>
+                <button class="nav-btn" data-tab="diario"><i class="fa-solid fa-calendar-day"></i> Diário</button>
+                <button class="nav-btn" data-tab="mensal"><i class="fa-solid fa-calendar-alt"></i> Mensal</button>
+                <button class="nav-btn" data-tab="anual"><i class="fa-solid fa-flag"></i> Anual</button>
+                <button class="nav-btn" data-tab="pomodoro"><i class="fa-solid fa-clock"></i> Pomodoro</button>
+            </nav>
+        </aside>
 
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <header class="top-header">
+                <h1>Painel de Estudos</h1>
+                <div class="user-info">
+                    <span id="current-date"></span>
+                </div>
+            </header>
+
+            <!-- Abas -->
+            <div class="tab-content">
+                <!-- Dashboard -->
+                <section id="dashboard" class="tab-pane active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fa-solid fa-list-check"></i>
+                            <div>
+                                <h3 id="total-tasks">0</h3>
+                                <p>Tarefas Pendentes</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div>
+                                <h3 id="completed-tasks">0</h3>
+                                <p>Concluídas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="welcome-banner">
+                        <h2>Bem-vinda de volta! 🚀</h2>
+                        <p>Organize sua rotina diária, mensal e anual para alcançar seus objetivos acadêmicos e profissionais.</p>
+                    </div>
+                </section>
+
+                <!-- Diário -->
+                <section id="diario" class="tab-pane">
+                    <h2>Planejamento Diário</h2>
+                    <div class="task-input-group">
+                        <input type="text" id="daily-input" placeholder="O que você vai estudar hoje?">
+                        <button id="add-daily-btn"><i class="fa-solid fa-plus"></i> Adicionar</button>
+                    </div>
+                    <ul id="daily-list" class="task-list"></ul>
+                </section>
+
+                <!-- Mensal -->
+                <section id="mensal" class="tab-pane">
+                    <h2>Metas Mensais</h2>
+                    <div class="task-input-group">
+                        <input type="text" id="monthly-input" placeholder="Meta para este mês...">
+                        <button id="add-monthly-btn"><i class="fa-solid fa-plus"></i> Adicionar</button>
+                    </div>
+                    <ul id="monthly-list" class="task-list"></ul>
+                </section>
+
+                <!-- Anual -->
+                <section id="anual" class="tab-pane">
+                    <h2>Objetivos Anuais</h2>
+                    <div class="task-input-group">
+                        <input type="text" id="annual-input" placeholder="Grande objetivo do ano...">
+                        <button id="add-annual-btn"><i class="fa-solid fa-plus"></i> Adicionar</button>
+                    </div>
+                    <ul id="annual-list" class="task-list"></ul>
+                </section>
+
+                <!-- Pomodoro -->
+                <section id="pomodoro" class="tab-pane">
+                    <h2>Cronômetro de Foco</h2>
+                    <div class="pomodoro-card">
+                        <div class="timer-display" id="timer">25:00</div>
+                        <div class="timer-controls">
+                            <button id="start-timer" class="btn-primary">Iniciar</button>
+                            <button id="pause-timer" class="btn-secondary">Pausar</button>
+                            <button id="reset-timer" class="btn-danger">Resetar</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
